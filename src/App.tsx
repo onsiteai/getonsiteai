@@ -272,14 +272,14 @@ export default function App() {
           <Badge className="mb-6">Now in early access</Badge>
 
           <h1 className="text-5xl sm:text-6xl font-semibold text-neutral-900 tracking-tight leading-[1.08] mb-6">
-            The AI App
+            AI for the job site,
             <br />
-            for Contractors
+            not the office.
           </h1>
 
           <p className="text-lg text-neutral-500 max-w-md mx-auto leading-relaxed mb-10">
-            Onsite handles the paperwork so you can stay on the job. Estimates, proposals, and
-            change orders — powered by AI.
+            Estimates, proposals, change orders, and invoices — generated in minutes so you can
+            stay on the job.
           </p>
 
           <div className="flex flex-col sm:flex-row gap-3 justify-center items-center">
