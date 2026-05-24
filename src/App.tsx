@@ -249,6 +249,12 @@ export default function App() {
             >
               Pricing
             </a>
+            <Link
+              to="/login"
+              className="text-xs font-medium text-neutral-500 hover:text-neutral-900 transition-colors"
+            >
+              Sign in
+            </Link>
             <a
               href="#waitlist"
               className="text-xs font-medium text-white bg-neutral-900 hover:bg-neutral-800 transition-colors px-3.5 py-2 rounded-lg"
