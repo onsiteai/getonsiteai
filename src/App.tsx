@@ -1,4 +1,5 @@
 import { useState } from 'react'
+import { Link } from 'react-router-dom'
 import { HardHat, Zap, ClipboardList, Clock, CheckCircle2, ArrowRight, Building2 } from 'lucide-react'
 import posthog from 'posthog-js'
 import { cn } from '@/lib/utils'
@@ -416,12 +417,20 @@ export default function App() {
       <footer className="border-t border-neutral-200 bg-white">
         <div className="max-w-5xl mx-auto px-6 h-14 flex items-center justify-between">
           <span className="text-xs text-neutral-400">© 2026 Onsite</span>
-          <a
-            href="mailto:hello@getonsiteai.com"
-            className="text-xs text-neutral-400 hover:text-neutral-600 transition-colors"
-          >
-            hello@getonsiteai.com
-          </a>
+          <div className="flex items-center gap-5">
+            <Link to="/privacy" className="text-xs text-neutral-400 hover:text-neutral-600 transition-colors">
+              Privacy
+            </Link>
+            <Link to="/terms" className="text-xs text-neutral-400 hover:text-neutral-600 transition-colors">
+              Terms
+            </Link>
+            <a
+              href="mailto:hello@getonsiteai.com"
+              className="text-xs text-neutral-400 hover:text-neutral-600 transition-colors"
+            >
+              hello@getonsiteai.com
+            </a>
+          </div>
         </div>
       </footer>
     </div>
