@@ -1,12 +1,13 @@
-import { StrictMode } from 'react'
+import { StrictMode, lazy, Suspense } from 'react'
 import { createRoot } from 'react-dom/client'
 import { BrowserRouter, Routes, Route } from 'react-router-dom'
 import posthog from 'posthog-js'
 import './index.css'
 import App from './App.tsx'
-import Login from './pages/Login.tsx'
-import PrivacyPolicy from './pages/PrivacyPolicy.tsx'
-import TermsOfService from './pages/TermsOfService.tsx'
+
+const Login = lazy(() => import('./pages/Login.tsx'))
+const PrivacyPolicy = lazy(() => import('./pages/PrivacyPolicy.tsx'))
+const TermsOfService = lazy(() => import('./pages/TermsOfService.tsx'))
 
 posthog.init(import.meta.env.VITE_POSTHOG_KEY as string, {
   api_host: import.meta.env.VITE_POSTHOG_HOST as string,
@@ -18,12 +19,14 @@ posthog.init(import.meta.env.VITE_POSTHOG_KEY as string, {
 createRoot(document.getElementById('root')!).render(
   <StrictMode>
     <BrowserRouter>
-      <Routes>
-        <Route path="/" element={<App />} />
-        <Route path="/login" element={<Login />} />
-        <Route path="/privacy" element={<PrivacyPolicy />} />
-        <Route path="/terms" element={<TermsOfService />} />
-      </Routes>
+      <Suspense>
+        <Routes>
+          <Route path="/" element={<App />} />
+          <Route path="/login" element={<Login />} />
+          <Route path="/privacy" element={<PrivacyPolicy />} />
+          <Route path="/terms" element={<TermsOfService />} />
+        </Routes>
+      </Suspense>
     </BrowserRouter>
   </StrictMode>,
 )
