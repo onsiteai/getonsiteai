@@ -6,6 +6,7 @@ import './index.css'
 import App from './App.tsx'
 
 const Login = lazy(() => import('./pages/Login.tsx'))
+const WaitlistPage = lazy(() => import('./pages/WaitlistPage.tsx'))
 const PrivacyPolicy = lazy(() => import('./pages/PrivacyPolicy.tsx'))
 const TermsOfService = lazy(() => import('./pages/TermsOfService.tsx'))
 
@@ -23,6 +24,7 @@ createRoot(document.getElementById('root')!).render(
         <Routes>
           <Route path="/" element={<App />} />
           <Route path="/login" element={<Login />} />
+          <Route path="/waitlist" element={<WaitlistPage />} />
           <Route path="/privacy" element={<PrivacyPolicy />} />
           <Route path="/terms" element={<TermsOfService />} />
         </Routes>

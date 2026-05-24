@@ -1,9 +1,7 @@
-import { useState } from 'react'
 import { Link } from 'react-router-dom'
 import { HardHat, Zap, ClipboardList, Clock, CheckCircle2, ArrowRight, Building2 } from 'lucide-react'
 import posthog from 'posthog-js'
 import { cn } from '@/lib/utils'
-import { supabase } from '@/lib/supabase'
 
 const features = [
   {
@@ -28,20 +26,6 @@ const features = [
   },
 ]
 
-const trades = [
-  'General Contractor',
-  'Electrician',
-  'Plumber',
-  'HVAC',
-  'Roofer',
-  'Painter',
-  'Landscaper',
-  'Flooring',
-  'Masonry / Concrete',
-  'Framing / Carpentry',
-  'Other',
-]
-
 const freePlanFeatures = [
   'Unlimited estimates & proposals',
   'AI-powered bid generation',
@@ -58,8 +42,6 @@ const enterprisePlanFeatures = [
   'API access & integrations',
   'Dedicated account manager',
 ]
-
-type FormState = 'idle' | 'loading' | 'success' | 'error'
 
 function Badge({ children, className }: { children: React.ReactNode; className?: string }) {
   return (
@@ -96,145 +78,6 @@ function FeatureCard({
   )
 }
 
-function WaitlistForm() {
-  const [formState, setFormState] = useState<FormState>('idle')
-  const [errorMsg, setErrorMsg] = useState('')
-  const [fields, setFields] = useState({
-    full_name: '',
-    company_name: '',
-    email: '',
-    phone: '',
-    trade: '',
-  })
-
-  function set(key: keyof typeof fields) {
-    return (e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>) =>
-      setFields((f) => ({ ...f, [key]: e.target.value }))
-  }
-
-  async function handleSubmit(e: React.FormEvent) {
-    e.preventDefault()
-    setFormState('loading')
-    setErrorMsg('')
-
-    posthog.capture('waitlist_submitted', {
-      trade: fields.trade || null,
-      has_phone: !!fields.phone.trim(),
-    })
-
-    const { error } = await supabase.from('waitlist').insert({
-      email: fields.email.trim().toLowerCase(),
-      full_name: fields.full_name.trim(),
-      company_name: fields.company_name.trim(),
-      phone: fields.phone.trim() || null,
-      trade: fields.trade || null,
-      referral_source: 'website',
-    })
-
-    if (error) {
-      if (error.code === '23505') {
-        // unique violation — already on waitlist
-        posthog.capture('waitlist_already_registered')
-        setFormState('success')
-      } else {
-        posthog.capture('waitlist_error', { error_code: error.code })
-        setErrorMsg("Something went wrong. Try emailing us at hello@getonsiteai.com.")
-        setFormState('error')
-      }
-    } else {
-      posthog.identify(fields.email.trim().toLowerCase(), {
-        name: fields.full_name.trim(),
-        company: fields.company_name.trim(),
-        trade: fields.trade || null,
-      })
-      posthog.capture('waitlist_joined', {
-        trade: fields.trade || null,
-        has_phone: !!fields.phone.trim(),
-      })
-      setFormState('success')
-    }
-  }
-
-  if (formState === 'success') {
-    return (
-      <div className="flex flex-col items-center gap-4 py-6">
-        <div className="w-12 h-12 rounded-full bg-neutral-900 flex items-center justify-center">
-          <CheckCircle2 className="w-6 h-6 text-white" strokeWidth={2} />
-        </div>
-        <div className="text-center">
-          <p className="text-sm font-semibold text-neutral-900 mb-1">You're on the list.</p>
-          <p className="text-sm text-neutral-500">We'll reach out when your spot is ready.</p>
-        </div>
-      </div>
-    )
-  }
-
-  return (
-    <form onSubmit={handleSubmit} className="flex flex-col gap-3 w-full max-w-sm mx-auto">
-      <div className="grid grid-cols-2 gap-3">
-        <input
-          required
-          type="text"
-          placeholder="Full name"
-          value={fields.full_name}
-          onChange={set('full_name')}
-          className="col-span-2 rounded-lg border border-neutral-200 bg-white px-3.5 py-2.5 text-sm text-neutral-900 placeholder-neutral-400 outline-none focus:border-neutral-400 transition-colors"
-        />
-        <input
-          required
-          type="text"
-          placeholder="Company name"
-          value={fields.company_name}
-          onChange={set('company_name')}
-          className="col-span-2 rounded-lg border border-neutral-200 bg-white px-3.5 py-2.5 text-sm text-neutral-900 placeholder-neutral-400 outline-none focus:border-neutral-400 transition-colors"
-        />
-        <input
-          required
-          type="email"
-          placeholder="Work email"
-          value={fields.email}
-          onChange={set('email')}
-          className="col-span-2 sm:col-span-1 rounded-lg border border-neutral-200 bg-white px-3.5 py-2.5 text-sm text-neutral-900 placeholder-neutral-400 outline-none focus:border-neutral-400 transition-colors"
-        />
-        <input
-          type="tel"
-          placeholder="Phone (optional)"
-          value={fields.phone}
-          onChange={set('phone')}
-          className="col-span-2 sm:col-span-1 rounded-lg border border-neutral-200 bg-white px-3.5 py-2.5 text-sm text-neutral-900 placeholder-neutral-400 outline-none focus:border-neutral-400 transition-colors"
-        />
-        <select
-          value={fields.trade}
-          onChange={set('trade')}
-          className="col-span-2 rounded-lg border border-neutral-200 bg-white px-3.5 py-2.5 text-sm text-neutral-900 outline-none focus:border-neutral-400 transition-colors appearance-none"
-        >
-          <option value="">Trade (optional)</option>
-          {trades.map((t) => (
-            <option key={t} value={t}>
-              {t}
-            </option>
-          ))}
-        </select>
-      </div>
-
-      {formState === 'error' && (
-        <p className="text-xs text-red-500 text-center">{errorMsg}</p>
-      )}
-
-      <button
-        type="submit"
-        disabled={formState === 'loading'}
-        className="inline-flex items-center justify-center gap-2 rounded-lg bg-neutral-900 px-6 py-2.5 text-sm font-medium text-white hover:bg-neutral-800 transition-colors disabled:opacity-60"
-      >
-        {formState === 'loading' ? 'Submitting…' : 'Request early access'}
-        {formState !== 'loading' && <ArrowRight className="w-4 h-4" />}
-      </button>
-
-      <p className="text-xs text-neutral-400 text-center">Free during beta. No credit card required.</p>
-    </form>
-  )
-}
-
 export default function App() {
   return (
     <div className="min-h-screen bg-neutral-50 flex flex-col">
@@ -256,12 +99,13 @@ export default function App() {
             >
               Sign in
             </a>
-            <a
-              href="#waitlist"
+            <Link
+              to="/waitlist"
+              onClick={() => posthog.capture('cta_clicked', { location: 'nav', label: 'get_early_access' })}
               className="text-xs font-medium text-white bg-neutral-900 hover:bg-neutral-800 transition-colors px-3.5 py-2 rounded-lg"
             >
               Get early access
-            </a>
+            </Link>
           </nav>
         </div>
       </header>
@@ -283,13 +127,13 @@ export default function App() {
           </p>
 
           <div className="flex flex-col sm:flex-row gap-3 justify-center items-center">
-            <a
-              href="#waitlist"
+            <Link
+              to="/waitlist"
               onClick={() => posthog.capture('cta_clicked', { location: 'hero', label: 'get_early_access' })}
               className="inline-flex items-center justify-center gap-2 rounded-lg bg-neutral-900 px-6 py-2.5 text-sm font-medium text-white hover:bg-neutral-800 transition-colors"
             >
               Get early access <ArrowRight className="w-4 h-4" />
-            </a>
+            </Link>
             <a
               href="#pricing"
               onClick={() => posthog.capture('cta_clicked', { location: 'hero', label: 'see_pricing' })}
@@ -358,13 +202,13 @@ export default function App() {
                 ))}
               </ul>
 
-              <a
-                href="#waitlist"
+              <Link
+                to="/waitlist"
                 onClick={() => posthog.capture('cta_clicked', { location: 'pricing', label: 'free_trial' })}
                 className="inline-flex items-center justify-center gap-2 rounded-lg bg-neutral-900 px-5 py-2.5 text-sm font-medium text-white hover:bg-neutral-800 transition-colors"
               >
                 Get started today <ArrowRight className="w-4 h-4" />
-              </a>
+              </Link>
             </div>
 
             {/* Enterprise */}
@@ -400,22 +244,22 @@ export default function App() {
           </div>
         </section>
 
-        {/* Divider */}
-        <div className="max-w-5xl mx-auto px-6">
-          <div className="border-t border-neutral-200" />
-        </div>
-
-        {/* Waitlist */}
-        <section id="waitlist" className="max-w-5xl mx-auto px-6 py-24">
-          <div className="rounded-2xl border border-neutral-200 bg-white px-8 py-14 text-center max-w-lg mx-auto">
+        {/* CTA */}
+        <section className="max-w-5xl mx-auto px-6 pb-24 pt-4">
+          <div className="rounded-2xl border border-neutral-200 bg-white px-8 py-14 text-center">
             <h2 className="text-2xl font-semibold text-neutral-900 tracking-tight mb-3">
               Ready to work smarter?
             </h2>
             <p className="text-neutral-500 text-sm mb-8 max-w-sm mx-auto">
-              Join the waitlist and be among the first contractors to use Onsite. We'll reach out
-              when your spot is ready.
+              Be among the first contractors to use Onsite. Free during beta — no credit card required.
             </p>
-            <WaitlistForm />
+            <Link
+              to="/waitlist"
+              onClick={() => posthog.capture('cta_clicked', { location: 'bottom_cta', label: 'get_early_access' })}
+              className="inline-flex items-center justify-center gap-2 rounded-lg bg-neutral-900 px-6 py-2.5 text-sm font-medium text-white hover:bg-neutral-800 transition-colors"
+            >
+              Get early access <ArrowRight className="w-4 h-4" />
+            </Link>
           </div>
         </section>
       </main>
