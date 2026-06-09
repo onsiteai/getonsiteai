@@ -1,5 +1,6 @@
+import { useState } from 'react'
 import { Link } from 'react-router-dom'
-import { HardHat, Zap, ClipboardList, Clock, CheckCircle2, ArrowRight, Building2 } from 'lucide-react'
+import { HardHat, Zap, ClipboardList, Clock, CheckCircle2, ArrowRight, Handshake } from 'lucide-react'
 import posthog from 'posthog-js'
 import { cn } from '@/lib/utils'
 
@@ -26,21 +27,24 @@ const features = [
   },
 ]
 
-const freePlanFeatures = [
+const proPlanFeatures = [
+  'Mason AI assistant',
   'Unlimited estimates & proposals',
   'AI-powered bid generation',
   'Client portal & approvals',
   'Change order management',
+  'CRM & customer management',
+  'Dashboard & analytics',
   'Invoicing',
+  'File attachments',
 ]
 
-const enterprisePlanFeatures = [
-  'Everything in Free Trial',
-  'Multi-crew management',
+const partnerPlanFeatures = [
+  'Everything in Pro',
   'Priority support & onboarding',
   'Custom branding & templates',
-  'API access & integrations',
-  'Dedicated account manager',
+  'Affiliate partner program',
+  'Early access to new features',
 ]
 
 function Badge({ children, className }: { children: React.ReactNode; className?: string }) {
@@ -73,6 +77,125 @@ function FeatureCard({
       <div>
         <h3 className="text-sm font-semibold text-neutral-900 mb-1">{title}</h3>
         <p className="text-sm text-neutral-500 leading-relaxed">{description}</p>
+      </div>
+    </div>
+  )
+}
+
+function BillingToggle() {
+  const [isAnnual, setIsAnnual] = useState(false)
+
+  return (
+    <div className="flex flex-col items-center">
+      {/* Toggle */}
+      <div className="inline-flex items-center rounded-lg border border-neutral-200 bg-white p-1 mb-10">
+        <button
+          onClick={() => setIsAnnual(false)}
+          className={cn(
+            'px-4 py-1.5 text-xs font-medium rounded-md transition-colors',
+            !isAnnual ? 'bg-neutral-900 text-white' : 'text-neutral-500 hover:text-neutral-900',
+          )}
+        >
+          Monthly
+        </button>
+        <button
+          onClick={() => setIsAnnual(true)}
+          className={cn(
+            'px-4 py-1.5 text-xs font-medium rounded-md transition-colors',
+            isAnnual ? 'bg-neutral-900 text-white' : 'text-neutral-500 hover:text-neutral-900',
+          )}
+        >
+          Annual (Save 8%)
+        </button>
+      </div>
+
+      {/* Cards */}
+      <div className="grid grid-cols-1 md:grid-cols-2 gap-6 max-w-3xl mx-auto w-full">
+        {/* Pro */}
+        <div className="rounded-xl border-2 border-neutral-900 bg-white p-8 flex flex-col gap-6 relative">
+          <div className="absolute -top-3 left-1/2 -translate-x-1/2">
+            <span className="inline-flex items-center rounded-full bg-neutral-900 px-3 py-1 text-xs font-medium text-white">
+              30-day free trial included
+            </span>
+          </div>
+
+          <div>
+            <p className="text-xs font-semibold uppercase tracking-widest text-neutral-400 mb-3">
+              Pro
+            </p>
+            <div className="flex items-baseline gap-2 mb-1">
+              {isAnnual ? (
+                <>
+                  <span className="text-4xl font-semibold text-neutral-900">$45</span>
+                  <span className="text-sm text-neutral-500">/ month</span>
+                  <span className="text-sm text-neutral-400 line-through ml-1">$49</span>
+                </>
+              ) : (
+                <>
+                  <span className="text-4xl font-semibold text-neutral-900">$49</span>
+                  <span className="text-sm text-neutral-500">/ month</span>
+                </>
+              )}
+            </div>
+            <p className="text-sm text-neutral-500">
+              {isAnnual ? 'Billed annually.' : 'Everything you need to run your business.'}
+            </p>
+          </div>
+
+          <ul className="flex flex-col gap-2.5 flex-1">
+            {proPlanFeatures.map((f) => (
+              <li key={f} className="flex items-start gap-2.5">
+                <CheckCircle2 className="w-4 h-4 text-neutral-700 mt-0.5 shrink-0" strokeWidth={2} />
+                <span className="text-sm text-neutral-600">{f}</span>
+              </li>
+            ))}
+          </ul>
+
+          <Link
+            to="/waitlist"
+            onClick={() =>
+              posthog.capture('cta_clicked', {
+                location: 'pricing',
+                label: 'pro_start_trial',
+                billing: isAnnual ? 'annual' : 'monthly',
+              })
+            }
+            className="inline-flex items-center justify-center gap-2 rounded-lg bg-neutral-900 px-5 py-2.5 text-sm font-medium text-white hover:bg-neutral-800 transition-colors"
+          >
+            Start free trial <ArrowRight className="w-4 h-4" />
+          </Link>
+        </div>
+
+        {/* Partner */}
+        <div className="rounded-xl border-2 border-neutral-900 bg-neutral-900 p-8 flex flex-col gap-6">
+          <div>
+            <p className="text-xs font-semibold uppercase tracking-widest text-neutral-400 mb-3">
+              Partner
+            </p>
+            <div className="flex items-baseline gap-1 mb-1">
+              <span className="text-4xl font-semibold text-white">Custom</span>
+            </div>
+            <p className="text-sm text-neutral-400">Grow with us.</p>
+          </div>
+
+          <ul className="flex flex-col gap-2.5 flex-1">
+            {partnerPlanFeatures.map((f) => (
+              <li key={f} className="flex items-start gap-2.5">
+                <CheckCircle2 className="w-4 h-4 text-neutral-300 mt-0.5 shrink-0" strokeWidth={2} />
+                <span className="text-sm text-neutral-300">{f}</span>
+              </li>
+            ))}
+          </ul>
+
+          <a
+            href="mailto:hello@getonsiteai.com?subject=Partner inquiry"
+            onClick={() => posthog.capture('cta_clicked', { location: 'pricing', label: 'partner_contact' })}
+            className="inline-flex items-center justify-center gap-2 rounded-lg bg-white px-5 py-2.5 text-sm font-medium text-neutral-900 hover:bg-neutral-100 transition-colors"
+          >
+            <Handshake className="w-4 h-4" />
+            Get in contact
+          </a>
+        </div>
       </div>
     </div>
   )
@@ -172,76 +295,14 @@ export default function App() {
             Pricing
           </p>
           <h2 className="text-2xl font-semibold text-neutral-900 tracking-tight text-center mb-3">
-            Start for free. Scale when you're ready.
+            Try Onsite free for 30 days.
           </h2>
-          <p className="text-sm text-neutral-500 text-center mb-12 max-w-sm mx-auto">
-            No limits during the beta. Get full access today and we'll work with you on pricing as
-            we grow.
+          <p className="text-sm text-neutral-500 text-center mb-8 max-w-sm mx-auto">
+            Full access to Mason AI and every feature. No limits. Cancel anytime.
           </p>
 
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-6 max-w-3xl mx-auto">
-            {/* Free Trial */}
-            <div className="rounded-xl border border-neutral-200 bg-white p-8 flex flex-col gap-6">
-              <div>
-                <p className="text-xs font-semibold uppercase tracking-widest text-neutral-400 mb-3">
-                  Free Trial
-                </p>
-                <div className="flex items-baseline gap-1 mb-1">
-                  <span className="text-4xl font-semibold text-neutral-900">$0</span>
-                  <span className="text-sm text-neutral-500">/ month</span>
-                </div>
-                <p className="text-sm text-neutral-500">Full access. No credit card required.</p>
-              </div>
-
-              <ul className="flex flex-col gap-2.5 flex-1">
-                {freePlanFeatures.map((f) => (
-                  <li key={f} className="flex items-start gap-2.5">
-                    <CheckCircle2 className="w-4 h-4 text-neutral-700 mt-0.5 shrink-0" strokeWidth={2} />
-                    <span className="text-sm text-neutral-600">{f}</span>
-                  </li>
-                ))}
-              </ul>
-
-              <Link
-                to="/waitlist"
-                onClick={() => posthog.capture('cta_clicked', { location: 'pricing', label: 'free_trial' })}
-                className="inline-flex items-center justify-center gap-2 rounded-lg bg-neutral-900 px-5 py-2.5 text-sm font-medium text-white hover:bg-neutral-800 transition-colors"
-              >
-                Get started today <ArrowRight className="w-4 h-4" />
-              </Link>
-            </div>
-
-            {/* Enterprise */}
-            <div className="rounded-xl border-2 border-neutral-900 bg-neutral-900 p-8 flex flex-col gap-6">
-              <div>
-                <p className="text-xs font-semibold uppercase tracking-widest text-neutral-400 mb-3">
-                  Enterprise
-                </p>
-                <div className="flex items-baseline gap-1 mb-1">
-                  <span className="text-4xl font-semibold text-white">Custom</span>
-                </div>
-                <p className="text-sm text-neutral-400">For larger teams and contractors.</p>
-              </div>
-
-              <ul className="flex flex-col gap-2.5 flex-1">
-                {enterprisePlanFeatures.map((f) => (
-                  <li key={f} className="flex items-start gap-2.5">
-                    <CheckCircle2 className="w-4 h-4 text-neutral-300 mt-0.5 shrink-0" strokeWidth={2} />
-                    <span className="text-sm text-neutral-300">{f}</span>
-                  </li>
-                ))}
-              </ul>
-
-              <a
-                href="mailto:hello@getonsiteai.com?subject=Enterprise inquiry"
-                onClick={() => posthog.capture('cta_clicked', { location: 'pricing', label: 'enterprise_contact' })}
-                className="inline-flex items-center justify-center gap-2 rounded-lg bg-white px-5 py-2.5 text-sm font-medium text-neutral-900 hover:bg-neutral-100 transition-colors"
-              >
-                <Building2 className="w-4 h-4" />
-                Get in contact
-              </a>
-            </div>
-          </div>
+          {/* Billing Toggle */}
+          <BillingToggle />
         </section>
 
         {/* CTA */}
@@ -251,14 +312,14 @@ export default function App() {
               Ready to work smarter?
             </h2>
             <p className="text-neutral-500 text-sm mb-8 max-w-sm mx-auto">
-              Be among the first contractors to use Onsite. Free during beta — no credit card required.
+              Start your 30-day free trial today. Full access to Mason AI and every feature.
             </p>
             <Link
               to="/waitlist"
-              onClick={() => posthog.capture('cta_clicked', { location: 'bottom_cta', label: 'get_early_access' })}
+              onClick={() => posthog.capture('cta_clicked', { location: 'bottom_cta', label: 'start_trial' })}
               className="inline-flex items-center justify-center gap-2 rounded-lg bg-neutral-900 px-6 py-2.5 text-sm font-medium text-white hover:bg-neutral-800 transition-colors"
             >
-              Get early access <ArrowRight className="w-4 h-4" />
+              Start free trial <ArrowRight className="w-4 h-4" />
             </Link>
           </div>
         </section>
