@@ -151,8 +151,8 @@ function BillingToggle() {
             ))}
           </ul>
 
-          <Link
-            to="/waitlist"
+          <a
+            href="https://app.getonsiteai.com/login"
             onClick={() =>
               posthog.capture('cta_clicked', {
                 location: 'pricing',
@@ -163,7 +163,7 @@ function BillingToggle() {
             className="inline-flex items-center justify-center gap-2 rounded-lg bg-neutral-900 px-5 py-2.5 text-sm font-medium text-white hover:bg-neutral-800 transition-colors"
           >
             Start free trial <ArrowRight className="w-4 h-4" />
-          </Link>
+          </a>
         </div>
 
         {/* Partner */}
@@ -222,13 +222,13 @@ export default function App() {
             >
               Sign in
             </a>
-            <Link
-              to="/waitlist"
-              onClick={() => posthog.capture('cta_clicked', { location: 'nav', label: 'get_early_access' })}
+            <a
+              href="https://app.getonsiteai.com/login"
+              onClick={() => posthog.capture('cta_clicked', { location: 'nav', label: 'start_trial' })}
               className="text-xs font-medium text-white bg-neutral-900 hover:bg-neutral-800 transition-colors px-3.5 py-2 rounded-lg"
             >
-              Get early access
-            </Link>
+              Start free trial
+            </a>
           </nav>
         </div>
       </header>
@@ -236,7 +236,7 @@ export default function App() {
       <main className="flex-1">
         {/* Hero */}
         <section className="max-w-5xl mx-auto px-6 pt-24 pb-20 text-center">
-          <Badge className="mb-6">Now in early access</Badge>
+          <Badge className="mb-6">Free for 30 days</Badge>
 
           <h1 className="text-5xl sm:text-6xl font-semibold text-neutral-900 tracking-tight leading-[1.08] mb-6">
             AI for the job site,
@@ -250,13 +250,13 @@ export default function App() {
           </p>
 
           <div className="flex flex-col sm:flex-row gap-3 justify-center items-center">
-            <Link
-              to="/waitlist"
-              onClick={() => posthog.capture('cta_clicked', { location: 'hero', label: 'get_early_access' })}
+            <a
+              href="https://app.getonsiteai.com/login"
+              onClick={() => posthog.capture('cta_clicked', { location: 'hero', label: 'start_trial' })}
               className="inline-flex items-center justify-center gap-2 rounded-lg bg-neutral-900 px-6 py-2.5 text-sm font-medium text-white hover:bg-neutral-800 transition-colors"
             >
-              Get early access <ArrowRight className="w-4 h-4" />
-            </Link>
+              Start free trial <ArrowRight className="w-4 h-4" />
+            </a>
             <a
               href="#pricing"
               onClick={() => posthog.capture('cta_clicked', { location: 'hero', label: 'see_pricing' })}
@@ -314,13 +314,13 @@ export default function App() {
             <p className="text-neutral-500 text-sm mb-8 max-w-sm mx-auto">
               Start your 30-day free trial today. Full access to Mason AI and every feature.
             </p>
-            <Link
-              to="/waitlist"
+            <a
+              href="https://app.getonsiteai.com/login"
               onClick={() => posthog.capture('cta_clicked', { location: 'bottom_cta', label: 'start_trial' })}
               className="inline-flex items-center justify-center gap-2 rounded-lg bg-neutral-900 px-6 py-2.5 text-sm font-medium text-white hover:bg-neutral-800 transition-colors"
             >
               Start free trial <ArrowRight className="w-4 h-4" />
-            </Link>
+            </a>
           </div>
         </section>
       </main>
