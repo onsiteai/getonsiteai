@@ -22,7 +22,13 @@ const trades = [
 type FormState = 'idle' | 'loading' | 'success' | 'error'
 
 export default function WaitlistPage() {
-  const [formState, setFormState] = useState<FormState>('idle')
+  const [formState, setFormState] = useState<FormState>(() => {
+    // Check if user already submitted
+    if (typeof window !== 'undefined' && localStorage.getItem('onsite_waitlist_joined')) {
+      return 'success'
+    }
+    return 'idle'
+  })
   const [errorMsg, setErrorMsg] = useState('')
   const [fields, setFields] = useState({
     full_name: '',
@@ -59,6 +65,7 @@ export default function WaitlistPage() {
     if (error) {
       if (error.code === '23505') {
         posthog.capture('waitlist_already_registered')
+        localStorage.setItem('onsite_waitlist_joined', '1')
         setFormState('success')
       } else {
         posthog.capture('waitlist_error', { error_code: error.code })
@@ -75,6 +82,7 @@ export default function WaitlistPage() {
         trade: fields.trade || null,
         has_phone: !!fields.phone.trim(),
       })
+      localStorage.setItem('onsite_waitlist_joined', '1')
       setFormState('success')
     }
   }

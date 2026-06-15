@@ -151,19 +151,25 @@ function BillingToggle() {
             ))}
           </ul>
 
-          <Link
-            to="/waitlist"
-            onClick={() =>
-              posthog.capture('cta_clicked', {
-                location: 'pricing',
-                label: 'start_trial',
-                billing: isAnnual ? 'annual' : 'monthly',
-              })
-            }
-            className="inline-flex items-center justify-center gap-2 rounded-lg bg-neutral-900 px-5 py-2.5 text-sm font-medium text-white hover:bg-neutral-800 transition-colors w-full"
-          >
-            Join waitlist <ArrowRight className="w-4 h-4" />
-          </Link>
+          {typeof window !== 'undefined' && localStorage.getItem('onsite_waitlist_joined') ? (
+            <span className="inline-flex items-center justify-center gap-2 rounded-lg bg-neutral-100 border border-neutral-200 px-5 py-2.5 text-sm font-medium text-neutral-500 w-full">
+              <CheckCircle2 className="w-4 h-4" /> You're on the waitlist
+            </span>
+          ) : (
+            <Link
+              to="/waitlist"
+              onClick={() =>
+                posthog.capture('cta_clicked', {
+                  location: 'pricing',
+                  label: 'start_trial',
+                  billing: isAnnual ? 'annual' : 'monthly',
+                })
+              }
+              className="inline-flex items-center justify-center gap-2 rounded-lg bg-neutral-900 px-5 py-2.5 text-sm font-medium text-white hover:bg-neutral-800 transition-colors w-full"
+            >
+              Join waitlist <ArrowRight className="w-4 h-4" />
+            </Link>
+          )}
         </div>
 
         {/* Partner */}
@@ -202,6 +208,8 @@ function BillingToggle() {
 }
 
 export default function App() {
+  const isOnWaitlist = typeof window !== 'undefined' && localStorage.getItem('onsite_waitlist_joined') === '1'
+
   return (
     <div className="min-h-screen bg-neutral-50 flex flex-col">
       {/* Nav */}
@@ -222,13 +230,19 @@ export default function App() {
             >
               Sign in
             </a>
-            <Link
-              to="/waitlist"
-              onClick={() => posthog.capture('cta_clicked', { location: 'nav', label: 'start_trial' })}
-              className="text-xs font-medium text-white bg-neutral-900 hover:bg-neutral-800 transition-colors px-3.5 py-2 rounded-lg"
-            >
-              Join waitlist
-            </Link>
+            {isOnWaitlist ? (
+              <span className="text-xs font-medium text-neutral-500 bg-neutral-100 border border-neutral-200 px-3.5 py-2 rounded-lg inline-flex items-center gap-1.5">
+                <CheckCircle2 className="w-3.5 h-3.5" /> On the waitlist
+              </span>
+            ) : (
+              <Link
+                to="/waitlist"
+                onClick={() => posthog.capture('cta_clicked', { location: 'nav', label: 'start_trial' })}
+                className="text-xs font-medium text-white bg-neutral-900 hover:bg-neutral-800 transition-colors px-3.5 py-2 rounded-lg"
+              >
+                Join waitlist
+              </Link>
+            )}
           </nav>
         </div>
       </header>
@@ -250,13 +264,19 @@ export default function App() {
           </p>
 
           <div className="flex flex-col sm:flex-row gap-3 justify-center items-center">
-            <Link
-              to="/waitlist"
-              onClick={() => posthog.capture('cta_clicked', { location: 'hero', label: 'start_trial' })}
-              className="inline-flex items-center justify-center gap-2 rounded-lg bg-neutral-900 px-6 py-2.5 text-sm font-medium text-white hover:bg-neutral-800 transition-colors"
-            >
-              Join waitlist <ArrowRight className="w-4 h-4" />
-            </Link>
+            {isOnWaitlist ? (
+              <span className="inline-flex items-center justify-center gap-2 rounded-lg bg-neutral-100 border border-neutral-200 px-6 py-2.5 text-sm font-medium text-neutral-500">
+                <CheckCircle2 className="w-4 h-4" /> You're on the waitlist
+              </span>
+            ) : (
+              <Link
+                to="/waitlist"
+                onClick={() => posthog.capture('cta_clicked', { location: 'hero', label: 'start_trial' })}
+                className="inline-flex items-center justify-center gap-2 rounded-lg bg-neutral-900 px-6 py-2.5 text-sm font-medium text-white hover:bg-neutral-800 transition-colors"
+              >
+                Join waitlist <ArrowRight className="w-4 h-4" />
+              </Link>
+            )}
             <a
               href="#pricing"
               onClick={() => posthog.capture('cta_clicked', { location: 'hero', label: 'see_pricing' })}
@@ -312,15 +332,21 @@ export default function App() {
               Ready to work smarter?
             </h2>
             <p className="text-neutral-500 text-sm mb-8 max-w-sm mx-auto">
-              Start your 30-day free trial today. Full access to Mason AI and every feature.
+              Join the waitlist for early access. Full access to Mason AI and every feature.
             </p>
-            <Link
-              to="/waitlist"
-              onClick={() => posthog.capture('cta_clicked', { location: 'bottom_cta', label: 'start_trial' })}
-              className="inline-flex items-center justify-center gap-2 rounded-lg bg-neutral-900 px-6 py-2.5 text-sm font-medium text-white hover:bg-neutral-800 transition-colors"
-            >
-              Join waitlist <ArrowRight className="w-4 h-4" />
-            </Link>
+            {isOnWaitlist ? (
+              <span className="inline-flex items-center justify-center gap-2 rounded-lg bg-neutral-100 border border-neutral-200 px-6 py-2.5 text-sm font-medium text-neutral-500">
+                <CheckCircle2 className="w-4 h-4" /> You're on the waitlist
+              </span>
+            ) : (
+              <Link
+                to="/waitlist"
+                onClick={() => posthog.capture('cta_clicked', { location: 'bottom_cta', label: 'start_trial' })}
+                className="inline-flex items-center justify-center gap-2 rounded-lg bg-neutral-900 px-6 py-2.5 text-sm font-medium text-white hover:bg-neutral-800 transition-colors"
+              >
+                Join waitlist <ArrowRight className="w-4 h-4" />
+              </Link>
+            )}
           </div>
         </section>
       </main>
