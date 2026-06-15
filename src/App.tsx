@@ -105,7 +105,7 @@ function FeatureCard({
 }
 
 function BillingToggle() {
-  const [isAnnual, setIsAnnual] = useState(false)
+  const [isAnnual, setIsAnnual] = useState(true)
   const [isLoading, setIsLoading] = useState(false)
 
   async function handleStartTrial() {
@@ -134,7 +134,7 @@ function BillingToggle() {
             isAnnual ? 'bg-neutral-900 text-white' : 'text-neutral-500 hover:text-neutral-900',
           )}
         >
-          Annual (Save 8%)
+          Annual (Save 10%)
         </button>
       </div>
 
@@ -157,11 +157,11 @@ function BillingToggle() {
                 <>
                   <span className="text-4xl font-semibold text-neutral-900">$45</span>
                   <span className="text-sm text-neutral-500">/ month</span>
-                  <span className="text-sm text-neutral-400 line-through ml-1">$49</span>
+                  <span className="text-sm text-neutral-400 line-through ml-1">$50</span>
                 </>
               ) : (
                 <>
-                  <span className="text-4xl font-semibold text-neutral-900">$49</span>
+                  <span className="text-4xl font-semibold text-neutral-900">$50</span>
                   <span className="text-sm text-neutral-500">/ month</span>
                 </>
               )}
