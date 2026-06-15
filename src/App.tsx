@@ -162,7 +162,7 @@ function BillingToggle() {
             }
             className="inline-flex items-center justify-center gap-2 rounded-lg bg-neutral-900 px-5 py-2.5 text-sm font-medium text-white hover:bg-neutral-800 transition-colors w-full"
           >
-            Start free trial <ArrowRight className="w-4 h-4" />
+            Join waitlist <ArrowRight className="w-4 h-4" />
           </Link>
         </div>
 
@@ -227,7 +227,7 @@ export default function App() {
               onClick={() => posthog.capture('cta_clicked', { location: 'nav', label: 'start_trial' })}
               className="text-xs font-medium text-white bg-neutral-900 hover:bg-neutral-800 transition-colors px-3.5 py-2 rounded-lg"
             >
-              Start free trial
+              Join waitlist
             </Link>
           </nav>
         </div>
@@ -255,7 +255,7 @@ export default function App() {
               onClick={() => posthog.capture('cta_clicked', { location: 'hero', label: 'start_trial' })}
               className="inline-flex items-center justify-center gap-2 rounded-lg bg-neutral-900 px-6 py-2.5 text-sm font-medium text-white hover:bg-neutral-800 transition-colors"
             >
-              Start free trial <ArrowRight className="w-4 h-4" />
+              Join waitlist <ArrowRight className="w-4 h-4" />
             </Link>
             <a
               href="#pricing"
@@ -319,7 +319,7 @@ export default function App() {
               onClick={() => posthog.capture('cta_clicked', { location: 'bottom_cta', label: 'start_trial' })}
               className="inline-flex items-center justify-center gap-2 rounded-lg bg-neutral-900 px-6 py-2.5 text-sm font-medium text-white hover:bg-neutral-800 transition-colors"
             >
-              Start free trial <ArrowRight className="w-4 h-4" />
+              Join waitlist <ArrowRight className="w-4 h-4" />
             </Link>
           </div>
         </section>
