@@ -47,28 +47,6 @@ const partnerPlanFeatures = [
   'Early access to new features',
 ]
 
-const MONTHLY_PRICE_ID = 'price_1TiFFBIZvzjRJTZzY3Y3ex2A'
-const ANNUAL_PRICE_ID = 'price_1TiFFBIZvzjRJTZzHjCgjiGM'
-
-async function startStripeCheckout(priceId: string, location: string) {
-  posthog.capture('cta_clicked', { location, label: 'start_trial_stripe' })
-  try {
-    const res = await fetch('https://app.getonsiteai.com/api/v1/stripe/checkout-session', {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ price_id: priceId }),
-    })
-    const data = await res.json()
-    if (data.url) {
-      window.location.href = data.url
-      return
-    }
-  } catch {
-    // fallback
-  }
-  window.location.href = 'https://app.getonsiteai.com/login'
-}
-
 function Badge({ children, className }: { children: React.ReactNode; className?: string }) {
   return (
     <span
@@ -106,13 +84,6 @@ function FeatureCard({
 
 function BillingToggle() {
   const [isAnnual, setIsAnnual] = useState(true)
-  const [isLoading, setIsLoading] = useState(false)
-
-  async function handleStartTrial() {
-    setIsLoading(true)
-    await startStripeCheckout(isAnnual ? ANNUAL_PRICE_ID : MONTHLY_PRICE_ID, 'pricing')
-    setIsLoading(false)
-  }
 
   return (
     <div className="flex flex-col items-center">
@@ -180,13 +151,19 @@ function BillingToggle() {
             ))}
           </ul>
 
-          <button
-            onClick={handleStartTrial}
-            disabled={isLoading}
-            className="inline-flex items-center justify-center gap-2 rounded-lg bg-neutral-900 px-5 py-2.5 text-sm font-medium text-white hover:bg-neutral-800 transition-colors disabled:opacity-50 disabled:cursor-not-allowed w-full"
+          <Link
+            to="/waitlist"
+            onClick={() =>
+              posthog.capture('cta_clicked', {
+                location: 'pricing',
+                label: 'start_trial',
+                billing: isAnnual ? 'annual' : 'monthly',
+              })
+            }
+            className="inline-flex items-center justify-center gap-2 rounded-lg bg-neutral-900 px-5 py-2.5 text-sm font-medium text-white hover:bg-neutral-800 transition-colors w-full"
           >
-            {isLoading ? 'Loading...' : 'Start free trial'} {!isLoading && <ArrowRight className="w-4 h-4" />}
-          </button>
+            Start free trial <ArrowRight className="w-4 h-4" />
+          </Link>
         </div>
 
         {/* Partner */}
@@ -245,12 +222,13 @@ export default function App() {
             >
               Sign in
             </a>
-            <button
-              onClick={() => startStripeCheckout(MONTHLY_PRICE_ID, 'nav')}
+            <Link
+              to="/waitlist"
+              onClick={() => posthog.capture('cta_clicked', { location: 'nav', label: 'start_trial' })}
               className="text-xs font-medium text-white bg-neutral-900 hover:bg-neutral-800 transition-colors px-3.5 py-2 rounded-lg"
             >
               Start free trial
-            </button>
+            </Link>
           </nav>
         </div>
       </header>
@@ -272,12 +250,13 @@ export default function App() {
           </p>
 
           <div className="flex flex-col sm:flex-row gap-3 justify-center items-center">
-            <button
-              onClick={() => startStripeCheckout(MONTHLY_PRICE_ID, 'hero')}
+            <Link
+              to="/waitlist"
+              onClick={() => posthog.capture('cta_clicked', { location: 'hero', label: 'start_trial' })}
               className="inline-flex items-center justify-center gap-2 rounded-lg bg-neutral-900 px-6 py-2.5 text-sm font-medium text-white hover:bg-neutral-800 transition-colors"
             >
               Start free trial <ArrowRight className="w-4 h-4" />
-            </button>
+            </Link>
             <a
               href="#pricing"
               onClick={() => posthog.capture('cta_clicked', { location: 'hero', label: 'see_pricing' })}
@@ -335,12 +314,13 @@ export default function App() {
             <p className="text-neutral-500 text-sm mb-8 max-w-sm mx-auto">
               Start your 30-day free trial today. Full access to Mason AI and every feature.
             </p>
-            <button
-              onClick={() => startStripeCheckout(MONTHLY_PRICE_ID, 'bottom_cta')}
+            <Link
+              to="/waitlist"
+              onClick={() => posthog.capture('cta_clicked', { location: 'bottom_cta', label: 'start_trial' })}
               className="inline-flex items-center justify-center gap-2 rounded-lg bg-neutral-900 px-6 py-2.5 text-sm font-medium text-white hover:bg-neutral-800 transition-colors"
             >
               Start free trial <ArrowRight className="w-4 h-4" />
-            </button>
+            </Link>
           </div>
         </section>
       </main>
