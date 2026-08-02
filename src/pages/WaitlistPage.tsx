@@ -96,7 +96,7 @@ export default function WaitlistPage() {
             Onsite
           </Link>
           <a
-            href="https://onsite-modules.onrender.com/login"
+            href="https://app.getonsiteai.com/login"
             className="text-xs font-medium text-neutral-500 hover:text-neutral-900 transition-colors"
           >
             Sign in

@@ -224,7 +224,7 @@ export default function App() {
               Pricing
             </a>
             <a
-              href="https://onsite-modules.onrender.com/login"
+              href="https://app.getonsiteai.com/login"
               onClick={() => posthog.capture('cta_clicked', { location: 'nav', label: 'sign_in' })}
               className="text-xs font-medium text-neutral-500 hover:text-neutral-900 transition-colors"
             >

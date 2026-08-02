@@ -1,6 +1,6 @@
 import { useEffect } from 'react'
 
-const APP_URL = 'https://onsite-modules.onrender.com'
+const APP_URL = 'https://app.getonsiteai.com'
 
 export default function Login() {
   useEffect(() => {
