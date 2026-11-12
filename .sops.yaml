@@ -1,0 +1,7 @@
+# Drop this file in a project root as `.sops.yaml`.
+# It tells SOPS to encrypt any *.env.enc or *.env.<env>.enc file to your personal age key.
+# The public key is safe to commit; the private key lives only in Bitwarden
+# + ~/.config/sops/age/keys.txt.
+creation_rules:
+  - path_regex: \.env(\..+)?\.enc$
+    age: age16fuya07tae3kgr82yzyrdp4cjautz4zmf6x35fwehw35vnc2kehqa2gcyz
