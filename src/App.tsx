@@ -440,7 +440,7 @@ export default function App() {
           </div>
         </section>
       </main>
-      <SiteFooter home />
+      <SiteFooter />
     </>
   )
 }
