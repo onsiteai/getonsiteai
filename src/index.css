@@ -239,7 +239,8 @@ section.block { padding-block: clamp(80px, 11vw, 136px) 0; }
 @media (max-width: 560px) { .bento { grid-template-columns: 1fr; } .w-mason, .w-photo, .w-2, .w-3, .w-2:last-child { grid-column: auto; } }
 
 /* Pricing — Teams is highlighted by default; hovering or focusing a card moves the highlight to it. */
-.plans { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 16px; max-width: 980px; }
+.plans { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 16px; max-width: 980px; margin-inline: auto; }
+#pricing .sec-head { margin-inline: auto; justify-items: center; text-align: center; }
 .plan {
   --p-bg: var(--card); --p-fg: var(--foreground); --p-2: var(--muted-foreground); --p-line: var(--border); --p-note: var(--hover);
   --p-btn: var(--foreground); --p-btn-fg: var(--background); --p-edge: var(--border);

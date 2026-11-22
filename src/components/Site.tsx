@@ -58,20 +58,13 @@ export function SiteHeader({ home = false }: { home?: boolean }) {
   )
 }
 
-export function SiteFooter({ home = false }: { home?: boolean }) {
+export function SiteFooter() {
   return (
     <footer className="gutter">
       <div className="wrap">
         <div className="foot-top">
           <Link className="brand-link" to="/"><Icon name="logo" className="" />Onsite</Link>
           <span>Bid-to-invoice for home renovation contractors.</span>
-          <nav aria-label="Footer">
-            <SectionLink home={home} id="how">How it works</SectionLink>
-            <SectionLink home={home} id="features">Features</SectionLink>
-            <SectionLink home={home} id="pricing">Pricing</SectionLink>
-            <SectionLink home={home} id="faq">FAQ</SectionLink>
-            <a href={APP_LOGIN_URL}>Sign in</a>
-          </nav>
         </div>
         <div className="foot-legal">
           <span>© {new Date().getFullYear()} Onsite AI, Inc.</span>
