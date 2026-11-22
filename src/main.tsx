@@ -1,12 +1,12 @@
 import { StrictMode, lazy, Suspense } from 'react'
 import { createRoot } from 'react-dom/client'
-import { BrowserRouter, Routes, Route } from 'react-router-dom'
+import { BrowserRouter, Routes, Route, Navigate } from 'react-router-dom'
 import posthog from 'posthog-js'
 import './index.css'
 import App from './App.tsx'
+import { ScrollManager } from '@/components/Site'
 
 const Login = lazy(() => import('./pages/Login.tsx'))
-const WaitlistPage = lazy(() => import('./pages/WaitlistPage.tsx'))
 const PrivacyPolicy = lazy(() => import('./pages/PrivacyPolicy.tsx'))
 const TermsOfService = lazy(() => import('./pages/TermsOfService.tsx'))
 
@@ -20,11 +20,12 @@ posthog.init(import.meta.env.VITE_POSTHOG_KEY as string, {
 createRoot(document.getElementById('root')!).render(
   <StrictMode>
     <BrowserRouter>
+      <ScrollManager />
       <Suspense>
         <Routes>
           <Route path="/" element={<App />} />
           <Route path="/login" element={<Login />} />
-          <Route path="/waitlist" element={<WaitlistPage />} />
+          <Route path="/waitlist" element={<Navigate to={{ pathname: '/', hash: '#join' }} replace />} />
           <Route path="/privacy" element={<PrivacyPolicy />} />
           <Route path="/terms" element={<TermsOfService />} />
         </Routes>
